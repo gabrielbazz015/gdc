@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalPlay — Cassino Virtual</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top, #24133f 0%, #0b0714 45%, #050509 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(7, 5, 13, 0.94);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        nav {
+            max-width: 1250px;
+            margin: auto;
+            min-height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .logo-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffd700, #ff9d00);
+            color: #170e00;
+            box-shadow: 0 0 25px rgba(255, 193, 7, 0.35);
+        }
+
+        .logo span {
+            color: #ffd43b;
+        }
+
+        .menu {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .menu a {
+            color: #ccc;
+            text-decoration: none;
+            transition: .2s;
+            font-size: 14px;
+        }
+
+        .menu a:hover {
+            color: #ffd43b;
+        }
+
+        .balance {
+            background: #17111f;
+            border: 1px solid rgba(255, 215, 0, .25);
+            padding: 10px 16px;
+            border-radius: 30px;
+            color: #ffd43b;
+            font-weight: bold;
+        }
+
+        /* HERO */
+
+        .hero {
+            max-width: 1250px;
+            margin: auto;
+            padding: 75px 25px 45px;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 75px);
+            line-height: .95;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #ffd43b;
+            text-shadow: 0 0 35px rgba(255, 212, 59, .25);
+        }
+
+        .hero p {
+            color: #aaa;
+            max-width: 570px;
+            font-size: 17px;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            cursor: pointer;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: .25s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ffd700, #ff9d00);
+            color: #171000;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, .2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 193, 7, .35);
+        }
+
+        .btn-secondary {
+            background: #17111f;
+            color: white;
+            border: 1px solid #30263d;
+        }
+
+        .btn-secondary:hover {
+            border-color: #ffd43b;
+        }
+
+        /* JACKPOT CARD */
+
+        .jackpot {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #241438, #120b1c);
+            border: 1px solid rgba(255, 215, 0, .25);
+            border-radius: 25px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, .45);
+        }
+
+        .jackpot::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: #ffd700;
+            filter: blur(100px);
+            opacity: .12;
+            top: -100px;
+            right: -50px;
+        }
+
+        .jackpot small {
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .jackpot h2 {
+            margin: 18px 0;
+            font-size: 48px;
+            color: #ffd43b;
+        }
+
+        .jackpot p {
+            color: #888;
+            font-size: 13px;
+        }
+
+        /* SECTION */
+
+        .section {
+            max-width: 1250px;
+            margin: auto;
+            padding: 50px 25px;
+        }
+
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+        }
+
+        .section-title span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* GAMES */
+
+        .games {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .game {
+            position: relative;
+            min-height: 210px;
+            border-radius: 20px;
+            padding: 25px;
+            overflow: hidden;
+            cursor: pointer;
+            background: linear-gradient(145deg, #1c1328, #100b17);
+            border: 1px solid #2b2136;
+            transition: .3s;
+        }
+
+        .game:hover {
+            transform: translateY(-7px);
+            border-color: rgba(255, 215, 0, .4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+        }
+
+        .game-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .game h3 {
+            margin-bottom: 7px;
+        }
+
+        .game p {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .game-tag {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: #ffd43b;
+            color: #171000;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* SLOT MACHINE */
+
+        .slot-area {
+            background: linear-gradient(145deg, #171020, #0c0812);
+            border: 1px solid #30223c;
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 750px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .slot-machine {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .reel {
+            width: 130px;
+            height: 130px;
+            background: #08060b;
+            border: 3px solid #ffd43b;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 65px;
+            box-shadow: inset 0 0 25px #000;
+        }
+
+        .slot-message {
+            color: #aaa;
+            margin-bottom: 20px;
+            min-height: 20px;
+        }
+
+        /* ROULETTE */
+
+        .roulette {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .wheel {
+            width: 280px;
+            height: 280px;
+            margin: auto;
+            border-radius: 50%;
+            background:
+                conic-gradient(
+                    #c62828 0deg 30deg,
+                    #111 30deg 60deg,
+                    #c62828 60deg 90deg,
+                    #111 90deg 120deg,
+                    #c62828 120deg 150deg,
+                    #111 150deg 180deg,
+                    #c62828 180deg 210deg,
+                    #111 210deg 240deg,
+                    #c62828 240deg 270deg,
+                    #111 270deg 300deg,
+                    #c62828 300deg 330deg,
+                    #111 330deg 360deg
+                );
+            border: 12px solid #c99d2e;
+            box-shadow: 0 0 50px rgba(255, 193, 7, .15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 3s cubic-bezier(.17,.67,.13,1);
+        }
+
+        .wheel-center {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: #151019;
+            border: 5px solid #ffd43b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .roulette-controls {
+            background: #17111f;
+            padding: 25px;
+            border-radius: 18px;
+        }
+
+        .roulette-controls h3 {
+            margin-bottom: 20px;
+        }
+
+        .color-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .red {
+            background: #c62828;
+        }
+
+        .black {
+            background: #050505;
+            border: 1px solid #444;
+        }
+
+        .green {
+            background: #16844a;
+        }
+
+        /* BONUS */
+
+        .bonus {
+            background: linear-gradient(120deg, #27153b, #14101d);
+            border: 1px solid #382647;
+            border-radius: 25px;
+            padding: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .bonus h2 {
+            margin-bottom: 10px;
+        }
+
+        .bonus p {
+            color: #999;
+            line-height: 1.6;
+        }
+
+        .bonus-icon {
+            font-size: 70px;
+        }
+
+        /* RANKING */
+
+        .ranking {
+            background: #110c17;
+            border: 1px solid #281d32;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .player {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 17px 22px;
+            border-bottom: 1px solid #211828;
+        }
+
+        .player:last-child {
+            border: none;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .position {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            background: #21162c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd43b;
+            font-weight: bold;
+        }
+
+        .player-name {
+            font-weight: bold;
+        }
+
+        .player-score {
+            color: #ffd43b;
+            font-weight: bold;
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 50px;
+            padding: 35px 25px;
+            text-align: center;
+            border-top: 1px solid #211827;
+            color: #666;
+        }
+
+        footer strong {
+            color: #ffd43b;
+        }
+
+        /* MODAL */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 450px;
+            background: #15101d;
+            border: 1px solid #3a2946;
+            border-radius: 22px;
+            padding: 30px;
+            box-shadow: 0 30px 100px rgba(0,0,0,.6);
+        }
+
+        .modal-box h2 {
+            margin-bottom: 10px;
+        }
+
+        .modal-box p {
+            color: #999;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .close {
+            float: right;
+            border: none;
+            background: transparent;
+            color: #aaa;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .games {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .roulette {
+                grid-template-columns: 1fr;
+            }
+
+            .menu {
+                display: none;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .games {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 45px;
+            }
+
+            .jackpot h2 {
+                font-size: 36px;
+            }
+
+            .reel {
+                width: 85px;
+                height: 100px;
+                font-size: 45px;
+            }
+
+            .wheel {
+                width: 230px;
+                height: 230px;
+            }
+
+            .bonus {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">♛</div>
+            Royal<span>Play</span>
+        </div>
+
+        <ul class="menu">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#jogos">Jogos</a></li>
+            <li><a href="#slot">Caça-Níquel</a></li>
+            <li><a href="#roleta">Roleta</a></li>
+            <li><a href="#ranking">Ranking</a></li>
+        </ul>
+
+        <div class="balance">
+            🪙 <span id="balance">1000</span>
+        </div>
+    </nav>
+</header>
+
+
+<main>
+
+    <!-- HERO -->
+
+    <section class="hero" id="inicio">
+
+        <div>
+            <h1>
+                Entre no mundo<br>
+                <span>RoyalPlay.</span>
+            </h1>
+
+            <p>
+                Uma experiência virtual inspirada nos grandes cassinos,
+                com jogos demonstrativos, desafios e moedas fictícias.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn btn-primary"
+                        onclick="document.getElementById('jogos').scrollIntoView({behavior:'smooth'})">
+                    🎰 Explorar jogos
+                </button>
+
+                <button class="btn btn-secondary"
+                        onclick="openModal()">
+                    ℹ️ Como funciona
+                </button>
+            </div>
+        </div>
+
+        <div class="jackpot">
+
+            <small>Jackpot virtual</small>
+
+            <h2 id="jackpot">2.584.720</h2>
+
+            <p>Valor demonstrativo — sem dinheiro real</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- JOGOS -->
+
+    <section class="section" id="jogos">
+
+        <div class="section-title">
+            <h2>Jogos em destaque</h2>
+            <span>Moedas virtuais</span>
+        </div>
+
+        <div class="games">
+
+            <div class="game" onclick="goTo('slot')">
+                <span class="game-tag">POPULAR</span>
+                <div class="game-icon">🎰</div>
+                <h3>Royal Slots</h3>
+                <p>Gire os rolos e tente formar combinações.</p>
+            </div>
+
+            <div class="game" onclick="goTo('roleta')">
+                <div class="game-icon">🎡</div>
+                <h3>Roleta Royal</h3>
+                <p>Uma versão visual da clássica roleta.</p>
+            </div>
+
+            <div class="game" onclick="showMessage('Blackjack demonstrativo em desenvolvimento.')">
+                <span class="game-tag">NOVO</span>
+                <div class="game-icon">🃏</div>
+                <h3>Blackjack</h3>
+                <p>Uma experiência de cartas totalmente fictícia.</p>
+            </div>
+
+            <div class="game" onclick="showMessage('Poker demonstrativo em desenvolvimento.')">
+                <div class="game-icon">♠️</div>
+                <h3>Poker Room</h3>
+                <p>Entre na mesa virtual RoyalPlay.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SLOT -->
+
+    <section class="section" id="slot">
+
+        <div class="section-title">
+            <h2>🎰 Royal Slots</h2>
+            <span>Jogo demonstrativo</span>
+        </div>
+
+        <div class="slot-area">
+
+            <p class="slot-message" id="slotMessage">
+                Gire os rolos usando suas moedas virtuais.
+            </p>
+
+            <div class="slot-machine">
+
+                <div class="reel" id="reel1">🍒</div>
+                <div class="reel" id="reel2">7️⃣</div>
+                <div class="reel" id="reel3">💎</div>
+
+            </div>
+
+            <button class="btn btn-primary" onclick="spinSlots()">
+                🎰 GIRAR
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ROLETA -->
+
+    <section class="section" id="roleta">
+
+        <div class="section-title">
+            <h2>🎡 Roleta Royal</h2>
+            <span>Simulação visual</span>
+        </div>
+
+        <div class="roulette">
+
+            <div>
+
+                <div class="wheel" id="wheel">
+                    <div class="wheel-center">
+                        R
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="roulette-controls">
+
+                <h3>Escolha uma cor</h3>
+
+                <div class="color-buttons">
+
+                    <button class="color-btn red"
+                            onclick="spinRoulette('Vermelho')">
+                        🔴 Vermelho
+                    </button>
+
+                    <button class="color-btn black"
+                            onclick="spinRoulette('Preto')">
+                        ⚫ Preto
+                    </button>
+
+                    <button class="color-btn green"
+                            onclick="spinRoulette('Verde')">
+                        🟢 Verde
+                    </button>
+
+                </div>
+
+                <p id="rouletteMessage" style="color:#888;">
+                    Escolha uma cor para girar.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- BONUS -->
+
+    <section class="section">
+
+        <div class="bonus">
+
+            <div>
+
+                <h2>🎁 Bônus diário</h2>
+
+                <p>
+                    Pegue sua recompensa virtual diária e aumente
+                    seu saldo de moedas fictícias.
+                </p>
+
+                <br>
+
+                <button class="btn btn-primary"
+                        id="bonusButton"
+                        onclick="dailyBonus()">
+                    Resgatar bônus
+                </button>
+
+            </div>
+
+            <div class="bonus-icon">
+                🎁
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RANKING -->
+
+    <section class="section" id="ranking">
+
+        <div class="section-title">
+            <h2>🏆 Ranking Royal</h2>
+            <span>Melhores jogadores virtuais</span>
+        </div>
+
+        <div class="ranking">
+
+            <div class="player">
+
+                <div class="player-info">
+                    <div class="position">1</div>
+                    <div class="player-name">👑 RoyalKing</div>
+                </div>
+
+                <div class="player-score">98.420 🪙</div>
+
+            </div>
+
+            <div class="player">
+
+                <div class="player-info">
+                    <div class="position">2</div>
+                    <div class="player-name">🎰 LuckyFox</div>
+                </div>
+
+                <div class="player-score">87.650 🪙</div>
+
+            </div>
+
+            <div class="player">
+
+                <div class="player-info">
+                    <div class="position">3</div>
+                    <div class="player-name">💎 Diamond</div>
+                </div>
+
+                <div class="player-score">76.310 🪙</div>
+
+            </div>
+
+            <div class="player">
+
+                <div class="player-info">
+                    <div class="position">4</div>
+                    <div class="player-name">🃏 CardMaster</div>
+                </div>
+
+                <div class="player-score">64.980 🪙</div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        <strong>RoyalPlay</strong> — experiência de cassino virtual
+    </p>
+
+    <br>
+
+    <p>
+        Projeto demonstrativo. Todas as moedas e resultados são fictícios.
+    </p>
+
+</footer>
+
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <button class="close" onclick="closeModal()">×</button>
+
+        <h2>♛ Sobre o RoyalPlay</h2>
+
+        <p>
+            O RoyalPlay é uma interface demonstrativa inspirada
+            em plataformas de cassino.
+        </p>
+
+        <p>
+            Todas as moedas utilizadas neste site são virtuais.
+            Não existem depósitos, saques ou apostas com dinheiro real.
+        </p>
+
+        <button class="btn btn-primary" onclick="closeModal()">
+            Entendi
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       SALDO
+    ========================= */
+
+    let balance = 1000;
+
+    function updateBalance() {
+        document.getElementById("balance").textContent =
+            balance.toLocaleString("pt-BR");
+    }
+
+
+    /* =========================
+       NAVEGAÇÃO
+    ========================= */
+
+    function goTo(id) {
+
+        document.getElementById(id).scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    function openModal() {
+
+        document.getElementById("modal")
+            .classList.add("active");
+
+    }
+
+    function closeModal() {
+
+        document.getElementById("modal")
+            .classList.remove("active");
+
+    }
+
+    document.getElementById("modal").addEventListener("click", function(e) {
+
+        if (e.target === this) {
+            closeModal();
+        }
+
+    });
+
+
+    /* =========================
+       MENSAGEM
+    ========================= */
+
+    function showMessage(message) {
+
+        alert(message);
+
+    }
+
+
+    /* =========================
+       SLOT
+    ========================= */
+
+    const symbols = [
+        "🍒",
+        "🍋",
+        "🍊",
+        "🍇",
+        "💎",
+        "⭐",
+        "7️⃣"
+    ];
+
+    function randomSymbol() {
+
+        return symbols[
+            Math.floor(Math.random() * symbols.length)
+        ];
+
+    }
+
+    function spinSlots() {
+
+        const cost = 20;
+
+        if (balance < cost) {
+
+            document.getElementById("slotMessage").textContent =
+                "Você não possui moedas virtuais suficientes.";
+
+            return;
+        }
+
+        balance -= cost;
+        updateBalance();
+
+        const reels = [
+            document.getElementById("reel1"),
+            document.getElementById("reel2"),
+            document.getElementById("reel3")
+        ];
+
+        const message =
+            document.getElementById("slotMessage");
+
+        message.textContent = "Girando...";
+
+        let spins = 0;
+
+        const interval = setInterval(() => {
+
+            reels.forEach(reel => {
+                reel.textContent = randomSymbol();
+            });
+
+            spins++;
+
+            if (spins >= 15) {
+
+                clearInterval(interval);
+
+                const result = reels.map(
+                    reel => reel.textContent
+                );
+
+                if (
+                    result[0] === result[1] &&
+                    result[1] === result[2]
+                ) {
+
+                    const prize = 300;
+
+                    balance += prize;
+                    updateBalance();
+
+                    message.textContent =
+                        "🎉 JACKPOT VIRTUAL! +" +
+                        prize +
+                        " moedas.";
+
+                } else if (
+                    result[0] === result[1] ||
+                    result[1] === result[2] ||
+                    result[0] === result[2]
+                ) {
+
+                    const prize = 80;
+
+                    balance += prize;
+                    updateBalance();
+
+                    message.textContent =
+                        "✨ Boa combinação! +" +
+                        prize +
+                        " moedas.";
+
+                } else {
+
+                    message.textContent =
+                        "Não foi dessa vez. Tente novamente.";
+
+                }
+
+            }
+
+        }, 100);
+
+    }
+
+
+    /* =========================
+       ROLETA
+    ========================= */
+
+    let rotation = 0;
+
+    function spinRoulette(choice) {
+
+        if (balance < 20) {
+
+            document.getElementById("rouletteMessage")
+                .textContent =
+                "Você não possui moedas suficientes.";
+
+            return;
+        }
+
+        balance -= 20;
+        updateBalance();
+
+        const wheel =
+            document.getElementById("wheel");
+
+        rotation +=
+            1440 + Math.floor(Math.random() * 360);
+
+        wheel.style.transform =
+            `rotate(${rotation}deg)`;
+
+        document.getElementById("rouletteMessage")
+            .textContent =
+            "A roleta está girando...";
+
+        setTimeout(() => {
+
+            const colors = [
+                "Vermelho",
+                "Preto",
+                "Verde"
+            ];
+
+            const result =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            if (result === choice) {
+
+                const prize =
+                    result === "Verde" ? 500 : 100;
+
+                balance += prize;
+                updateBalance();
+
+                document.getElementById("rouletteMessage")
+                    .textContent =
+                    `🎉 Resultado: ${result}. Você ganhou ${prize} moedas!`;
+
+            } else {
+
+                document.getElementById("rouletteMessage")
+                    .textContent =
+                    `Resultado: ${result}. Não foi dessa vez.`;
+
+            }
+
+        }, 3000);
+
+    }
+
+
+    /* =========================
+       BÔNUS
+    ========================= */
+
+    function dailyBonus() {
+
+        const button =
+            document.getElementById("bonusButton");
+
+        if (localStorage.getItem("royalBonus") === "true") {
+
+            button.textContent =
+                "Bônus já resgatado";
+
+            return;
+        }
+
+        const bonus = 250;
+
+        balance += bonus;
+
+        updateBalance();
+
+        localStorage.setItem(
+            "royalBonus",
+            "true"
+        );
+
+        button.textContent =
+            "✓ Bônus resgatado!";
+
+        button.disabled = true;
+
+    }
+
+
+    /* =========================
+       JACKPOT ANIMADO
+    ========================= */
+
+    let jackpotValue = 2584720;
+
+    setInterval(() => {
+
+        jackpotValue +=
+            Math.floor(Math.random() * 20);
+
+        document.getElementById("jackpot")
+            .textContent =
+            jackpotValue.toLocaleString("pt-BR");
+
+    }, 1500);
+
+
+    /* =========================
+       INICIALIZAÇÃO
+    ========================= */
+
+    updateBalance();
+
+</script>
+
+</body>
+</html>
