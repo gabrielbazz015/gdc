@@ -596,7 +596,7 @@
 
                     <p class="page-subtitle">
 
-                        Solicite um carrinho de notebooks para utilização.
+                        Realize um carrinho de notebooks para utilização.
 
                     </p>
 
@@ -860,7 +860,7 @@
 
                                 <i class="bi bi-send me-2"></i>
 
-                                Solicitar empréstimo
+                                Realizar empréstimo
 
                             </button>
 

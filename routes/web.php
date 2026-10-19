@@ -88,6 +88,23 @@ Route::get('/contagem-notebooks', [ContagemNotebooksController::class, 'index'])
     ->name('contagem.notebooks');
 
 
+Route::post(
+    '/notebooks/{id}/status',
+    [ContagemNotebooksController::class, 'atualizarStatus']
+)->name('notebook.status');
+
+
+Route::post(
+    '/notebooks',
+    [ContagemNotebooksController::class, 'store']
+)->name('notebook.store');
+
+Route::delete(
+    '/notebooks/{id}',
+    [ContagemNotebooksController::class, 'destroy']
+)->name('notebook.destroy');
+
+
 /*
 |--------------------------------------------------------------------------
 | Reclame Aqui

@@ -644,7 +644,7 @@
 
                         <i class="bi bi-cart-check me-2"></i>
 
-                        Solicitar Empréstimo
+                        Realizar Empréstimo
 
                     </a>
 
@@ -713,7 +713,7 @@
 
                     <h4 class="fw-bold">
 
-                        Solicitar Empréstimo
+                        Realizar Empréstimo
 
                     </h4>
 
