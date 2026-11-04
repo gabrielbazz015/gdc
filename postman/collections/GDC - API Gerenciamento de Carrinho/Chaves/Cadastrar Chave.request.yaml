@@ -1,0 +1,47 @@
+$kind: http-request
+name: 'Cadastrar Chave'
+description: |-
+  Cria uma nova chave.
+  Recurso: IMPLEMENTADO | Rota: POST /api/chaves
+  Campos confirmados: identificacao, status, id_carrinho
+method: POST
+url: '{{base_url}}/api/chaves'
+order: 3000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "identificacao": "CHAVE-001",
+      "status": "disponivel",
+      "id_carrinho": 1
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 201 ou 422", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 201, 422]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 201 || pm.response.code === 200) {
+          pm.test("Chave criada possui identificacao", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'identificacao');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }

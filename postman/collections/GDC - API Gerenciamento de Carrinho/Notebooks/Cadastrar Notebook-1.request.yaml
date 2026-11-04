@@ -1,0 +1,5 @@
+$kind: http-request
+name: Cadastrar Notebook
+url: ""
+method: GET
+order: 6000

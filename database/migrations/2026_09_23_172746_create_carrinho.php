@@ -6,23 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('carrinho', function (Blueprint $table) {
             $table->id();
-            $table->string('identificação');
-            $table->string('localizacao');
-            $table->integer('quantidade_notebooks');
-            $table->timestamps();
+            $table->string('identificacao', 100);
+            $table->string('localizacao', 150)->nullable();
+            $table->unsignedInteger('quantidade_notebooks')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('carrinho');

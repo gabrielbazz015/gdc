@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Excluir Responsável'
+description: |-
+  Remove um responsável pelo ID.
+  Recurso: IMPLEMENTADO | Rota: DELETE /api/responsaveis/:id
+method: DELETE
+url: '{{base_url}}/api/responsaveis/:id'
+order: 5000
+headers:
+  - key: Accept
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do responsável a excluir'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 204 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);
+      });
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Responsável não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

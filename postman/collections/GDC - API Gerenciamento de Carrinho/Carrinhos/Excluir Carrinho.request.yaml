@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Excluir Carrinho'
+description: |-
+  Remove um carrinho pelo ID.
+  Recurso: IMPLEMENTADO | Rota: DELETE /api/carrinhos/:id
+method: DELETE
+url: '{{base_url}}/api/carrinhos/:id'
+order: 5000
+headers:
+  - key: Accept
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do carrinho a excluir'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 204 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 204, 404]);
+      });
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Carrinho não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

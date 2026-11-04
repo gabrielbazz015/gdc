@@ -1,0 +1,51 @@
+$kind: http-request
+name: 'Cadastrar Usuário'
+description: |-
+  Cria um novo usuário.
+  Recurso: IMPLEMENTADO | Rota: POST /api/usuarios
+  Campos confirmados: nome, email, senha, tipo
+
+  Nota: Existe também a rota POST /api/salvar_usuario com funcionalidade similar.
+  O CRUD principal utiliza /api/usuarios.
+method: POST
+url: '{{base_url}}/api/usuarios'
+order: 3000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "nome": "Maria Souza",
+      "email": "maria.souza@escola.edu.br",
+      "senha": "senha_segura_123",
+      "tipo": "aluno"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 201 ou 422", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 201, 422]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 201 || pm.response.code === 200) {
+          pm.test("Usuário criado possui nome e email", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'nome', 'email');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }

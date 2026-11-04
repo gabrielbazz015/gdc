@@ -1,0 +1,56 @@
+$kind: http-request
+name: 'Atualizar Responsável'
+description: |-
+  Atualiza os dados de um responsável existente.
+  Recurso: IMPLEMENTADO | Rota: PUT /api/responsaveis/:id
+  Campos confirmados: nome, matricula
+method: PUT
+url: '{{base_url}}/api/responsaveis/:id'
+order: 4000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do responsável a atualizar'
+body:
+  type: json
+  content: |-
+    {
+      "nome": "Prof. João Silva (atualizado)",
+      "matricula": "MAT-2024-001-A"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 422 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 422, 404]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 200) {
+          pm.test("Responsável atualizado retorna dados", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'nome');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Responsável não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

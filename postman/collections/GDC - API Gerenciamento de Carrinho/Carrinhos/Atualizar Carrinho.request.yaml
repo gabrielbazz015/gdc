@@ -1,0 +1,57 @@
+$kind: http-request
+name: 'Atualizar Carrinho'
+description: |-
+  Atualiza os dados de um carrinho existente.
+  Recurso: IMPLEMENTADO | Rota: PUT /api/carrinhos/:id
+  Campos confirmados: identificacao, localizacao, quantidade_notebooks
+method: PUT
+url: '{{base_url}}/api/carrinhos/:id'
+order: 4000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do carrinho a atualizar'
+body:
+  type: json
+  content: |-
+    {
+      "identificacao": "CARR-001-ATUALIZADO",
+      "localizacao": "Sala 202",
+      "quantidade_notebooks": 15
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 422 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 422, 404]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 200) {
+          pm.test("Carrinho atualizado retorna dados", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'identificacao');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Carrinho não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

@@ -1,0 +1,61 @@
+$kind: http-request
+name: 'Atualizar Empréstimo'
+description: |-
+  Atualiza os dados de um empréstimo existente.
+  Recurso: IMPLEMENTADO | Rota: PUT /api/emprestimos/:id
+  Campos confirmados: id_usuario, id_responsavel, id_carrinho, data_retirada, data_devolucao, finalidade, status
+method: PUT
+url: '{{base_url}}/api/emprestimos/:id'
+order: 4000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do empréstimo a atualizar'
+body:
+  type: json
+  content: |-
+    {
+      "id_usuario": 1,
+      "id_responsavel": 1,
+      "id_carrinho": 1,
+      "data_retirada": "2024-01-15 08:00:00",
+      "data_devolucao": "2024-01-15 20:00:00",
+      "finalidade": "Aula de Informática (atualizado)",
+      "status": "devolvido"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 422 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 422, 404]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 200) {
+          pm.test("Empréstimo atualizado retorna dados", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'status');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Empréstimo não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

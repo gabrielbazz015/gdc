@@ -1,0 +1,14 @@
+$kind: collection
+description: |-
+  Collection completa da API do sistema GDC (Gerenciamento de Carrinho).
+
+  Organizada em pastas por recurso. Recursos implementados possuem CRUD completo.  
+  Recursos propostos (Empréstimos de Notebooks, Logs de Empréstimos, Problemas) estão  
+  marcados como PROPOSTO/NÃO IMPLEMENTADO e aguardam confirmação de rotas e campos.
+
+  **Autenticação:** Poderá ser necessária em alguns endpoints (ex.: Bearer Token ou  
+  sessão). Confirme com a equipe de backend antes de usar em produção.
+
+  **Ambiente recomendado:** GDC Local (base_url = [http://](http://gdc.test)[http://127.0.0.1:8000/](http://127.0.0.1:8000/))
+variables:
+  base_url: http://gdc.test

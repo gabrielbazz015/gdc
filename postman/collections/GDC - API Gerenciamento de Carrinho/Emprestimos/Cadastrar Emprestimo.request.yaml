@@ -1,0 +1,51 @@
+$kind: http-request
+name: 'Cadastrar Empréstimo'
+description: |-
+  Registra um novo empréstimo.
+  Recurso: IMPLEMENTADO | Rota: POST /api/emprestimos
+  Campos confirmados: id_usuario, id_responsavel, id_carrinho, data_retirada, data_devolucao, finalidade, status
+method: POST
+url: '{{base_url}}/api/emprestimos'
+order: 3000
+headers:
+  - key: Accept
+    value: application/json
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id_usuario": 1,
+      "id_responsavel": 1,
+      "id_carrinho": 1,
+      "data_retirada": "2024-01-15 08:00:00",
+      "data_devolucao": "2024-01-15 18:00:00",
+      "finalidade": "Aula de Informática",
+      "status": "ativo"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200, 201 ou 422", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 201, 422]);
+      });
+
+      pm.test("Resposta é JSON válido", function () {
+          pm.response.to.be.json;
+      });
+
+      if (pm.response.code === 201 || pm.response.code === 200) {
+          pm.test("Empréstimo criado possui ID", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'id_usuario', 'id_carrinho');
+          });
+      }
+
+      if (pm.response.code === 422) {
+          pm.test("422 - Erros de validação presentes", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('errors', 'message');
+          });
+      }

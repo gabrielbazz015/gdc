@@ -1,0 +1,39 @@
+$kind: http-request
+name: 'Consultar Responsável'
+description: |-
+  Retorna os dados de um responsável específico pelo ID.
+  Recurso: IMPLEMENTADO | Rota: GET /api/responsaveis/:id
+method: GET
+url: '{{base_url}}/api/responsaveis/:id'
+order: 2000
+headers:
+  - key: Accept
+    value: application/json
+pathVariables:
+  - key: id
+    value: '1'
+    description: 'ID do responsável'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200 ou 404", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 404]);
+      });
+
+      if (pm.response.code === 200) {
+          pm.test("Resposta é JSON válido", function () {
+              pm.response.to.be.json;
+          });
+
+          pm.test("Responsável possui campos esperados", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.have.any.keys('id', 'nome', 'matricula');
+          });
+      }
+
+      if (pm.response.code === 404) {
+          pm.test("404 - Responsável não encontrado", function () {
+              pm.response.to.have.status(404);
+          });
+      }

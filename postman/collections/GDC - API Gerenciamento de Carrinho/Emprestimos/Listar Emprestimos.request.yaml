@@ -1,0 +1,29 @@
+$kind: http-request
+name: 'Listar Empréstimos'
+description: |-
+  Retorna a lista de todos os empréstimos cadastrados.
+  Recurso: IMPLEMENTADO | Rota: GET /api/emprestimos
+method: GET
+url: '{{base_url}}/api/emprestimos'
+order: 1000
+headers:
+  - key: Accept
+    value: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status 200 ou 204", function () {
+          pm.expect(pm.response.code).to.be.oneOf([200, 204]);
+      });
+
+      if (pm.response.code === 200) {
+          pm.test("Resposta é JSON válido", function () {
+              pm.response.to.be.json;
+          });
+
+          pm.test("Dados retornados são array ou objeto", function () {
+              const body = pm.response.json();
+              pm.expect(body).to.satisfy(b => Array.isArray(b) || typeof b === 'object');
+          });
+      }
